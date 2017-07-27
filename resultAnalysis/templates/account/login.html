@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<br/>
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <div class="card">
+      <div class="card-content" style="padding-bottom: 0px">
+        <span class="card-title">Login</span>
+        <span style="color:red">{{ form.errors }}</span>
+        <div class="row">
+        <form action="" method="post" class="col s10 offset-s1">
+         {% csrf_token %}
+          <div class="row">
+            <div class="input-field col s12">
+              {{ form.username }}
+              <label for="username" data-error="Please enter a valid username">Username</label>
+            </div>
+            <div class="input-field col s12">
+              {{ form.password }}
+              <label for="password" data-error="Please enter a valid password">Password</label>
+            </div>
+            <div style="text-align:center;">
+              <button class="waves-effect waves-blue btn center">SUBMIT</button>
+            </div>
+          </div>
+        </form>
+        </div>
+        <div style="padding:10px;">
+        <ul>
+        <li><b>NOTE</b></li>
+        <li>Go to <a target="_blank" href="https://erp.aktu.ac.in/WebPages/OneView/OneView.aspx">AKTU One View Result</a></li>
+        <li>Open Your result and copy the URL of your result</li>
+        <li>Paste the URL copied from AKTU oneview result to URL field in the above form</li>
+        <li>Then click on add button. This proccess may tak time.</li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}
+

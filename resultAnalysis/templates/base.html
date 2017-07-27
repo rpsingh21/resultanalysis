@@ -1,0 +1,111 @@
+{% load staticfiles %}
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{% block title %}{% endblock %} | RESULT ANALYSIS</title>
+      <link rel="icon" href="/media/img/logo.jpg" type="image/jpg" sizes="16x16">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      
+      <link rel="stylesheet" href="{% static 'css/main.css' %}">
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+      {% block header %}
+      {% endblock %}
+   </head>
+   <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.10";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+      <ul class="side-nav" id="mobile-nav">
+         <li><a href="{% url 'result:home' %}">Home</a></li>
+         <li><a href="{% url 'analysis:studentResulAnalysisform' %}">My Analysis</a></li>
+         <li><a href="{% url 'analysis:compare' %}">Compare</a></li>
+         <li><a href="{% url 'result:newResult' %}">Add New Result</a></li>
+         <div class="divider"></div>
+         <li><a href="{% url 'result:reporterror' %}">Report Error</a></li>
+         <li><a href="{% url 'result:contact' %}">Contact Us</a></li>
+         <div class="divider"></div>
+    
+      </ul>
+      <div class="navbar-fixed">
+         <nav class="white nav">
+            <div class="nav-wrapper container">
+               <a href="/"><img src="/media/img/logo.jpg"
+                  height="100%;" class="hide-on-med-and-down" style="padding: 5px;">
+                  </a>
+               <a href="/" class="brand-logo">Result Analysis</a>
+               <a href="#" data-activates="mobile-nav" class="button-collapse"><i class="material-icons">menu</i></a>
+               <ul class="right hide-on-med-and-down">
+                  <li><a href="{% url 'result:home' %}">Home</a></li>
+                  <li><a href="{% url 'analysis:studentResulAnalysisform' %}">My Analysis</a></li>
+                  <li><a href="{% url 'analysis:compare' %}">Compare</a></li>
+                  <li><a href="{% url 'result:newResult' %}">Add New Result</a></li>
+                  <li><a href="{% url 'result:reporterror' %}">Report Error</a></li>
+               </ul>
+            </div>
+         </nav>
+      </div>
+      <main>
+         {% block content %}
+         {% endblock %}
+      </main>
+
+      <footer id="footer" class="my-footer page-footer hide-on-med-only hide-on-small-only grey">
+         <div class="container">
+            <div class="row">
+               <div class="col l6 s12">
+                  <h5 class="white-text">Result Analysis</h5>
+                  <p class="grey-text text-lighten-4">Result Analysis is the initiative taken by the students of FGIET, Raerbareli. Result Analysis provides the ranking of students by internal marks, external marks, and total marks. It also helps student to analyze their result.</p>
+                  <div class="fb-like" data-href="https://www.facebook.com/fgietResult/" data-width="450" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+               </div>
+
+               <div class="col l4 offset-l2 s12">
+                  <h5 class="white-text">Links</h5>
+                  <ul>
+                     <li><a class="grey-text text-lighten-3" href="#!">Home</a></li>
+                     <li><a class="grey-text text-lighten-3" href="{% url 'result:reporterror' %}">Report error in result</a></li>
+                     <li><a class="grey-text text-lighten-3" href="{% url 'result:contact' %}">Contact Us</a></li>
+                     <li><a class="grey-text text-lighten-3" href="#!">Report Bug</a></li>
+                     {% if user.is_authenticated %}
+                     <li><a class="grey-text text-lighten-3" href="{% url 'account:logout' %}">logout</a></li>
+                     {% else %}
+                     <li><a class="grey-text text-lighten-3" href="{% url 'account:login' %}">login</a></li>
+                     {% endif %}
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="footer-copyright">
+            <div class="container">
+               © 2015 resultanalysis.in
+               <a class="grey-text text-lighten-4 right" href="#!">About us  </a>
+            </div>
+         </div>
+      </footer>
+      <!-- <div class="fb-like hide-on-large-only" data-href="https://www.facebook.com/fgietResult/" data-width="250" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div> -->
+      
+      <div class="hide-on-large-only grey mobile-footer my-footer">
+      <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+         <p>made with <img src="/media/img/heart.svg" height="25px"> by resultanalysis.in</p>
+      </div>
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="{%static 'js/shuffle.js'%}"></script>
+      <script>
+         $(document).ready(function () {
+             $(".button-collapse").sideNav();
+             })
+      </script>
+      {% block js %}
+      {% endblock %}
+   </body>
+</html>
+
+

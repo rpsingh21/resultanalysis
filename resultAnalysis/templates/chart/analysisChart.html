@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}{{ title  }}{% endblock %}
+{% block content %}
+
+<div class="row container">
+{% if graph %}
+  <div class="col s12 m6 result-card">
+    <div class="card horizontal" style="padding:10px;">
+      <div class="card-image ">
+      {% if student.image|length > 200 %}
+          <img src="{{ student.image }}"  class="user-img">
+      {% else %}
+        <img class="user-img" src="https://www.servicewiz.com/swizz/resources/images/no-user-img.png">
+      {% endif %}
+        <!-- <span class="card-title">{{ result.student.name|capfirst }}</span> -->
+      </div>
+      <div class="card-content" style="padding:10px;">
+        <span class="flow-text">{{ student.name | truncatechars:19  }}</span><br>
+        <span>{{ student.rollNo }}</span><br>
+        <span>{{ student.branchCode.branchName }}</span><br>
+        <span>{{ student.college.collegeName }}</span>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+    <div class="col s12 m6 result-card">
+    <div class="card horizontal" style="padding:10px;">
+      <div class="card-content" style="padding:0px";>
+        <span class="flow-text">Analyse New Roll No.</span><br>
+        <form id="analsis-form">
+        <span style="color:red">{{error}}</span>
+        <div class="input-field col l12 s12">
+                  <i class="material-icons prefix">account_circle</i>
+                  <input id="rollNo" required name="rollNo" type="text" pattern="\d{7,15}" class="validate">
+                  <label for="rollNo" data-error="Please correct your roll no">Roll Number</label>
+                  <button class="waves-effect waves-blue btn center">VIEW</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% if graph %}
+
+    <div class="chart">
+      <canvas id="total" ></canvas>
+    </div>
+    <div class="chart">
+      <canvas id="rankingChart" ></canvas>
+    </div>
+    {% for i in semester %}
+      <div class="chart">
+        <canvas id="Chart{{ i }}" ></canvas>
+      </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function () {
+  test()
+    $("#analsis-form").submit(function(e){
+        e.preventDefault()
+        var rno = $('#rollNo').val();
+        window.location = "/analysis/student/"+rno; 
+    })
+})
+</script>
+{% if graph %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  
+    <script>
+      function getData(endpoint,charId,semester){
+          var subjectList = []
+          var internal=[]
+          var external=[]
+          var totalMarks=[]
+          $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data){
+            subjectList=data.subjectList
+            internal=data.internal
+            external=data.external
+            totalMarks=data.totalMarks
+            
+     // console.log(internal);
+            setChart(subjectList, internal, external, totalMarks, charId,semester);
+          },
+          error: function(error_data){
+          // console.log("error")
+          // console.log(error_data)
+          }
+        })
+      }
+        
+      options1= {
+                responsive: true,
+                maintainAspectRatio: false,
+                title:{
+                    display:true,
+                    text:'TEXT'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Subject'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        }
+                    }]
+                }
+            }
+
+    function setChart(subjectList, internal, external, totalMarks, charId,semester){    
+      var ctx = document.getElementById(charId);
+      options1.title.text="SEMESTER "+semester+" RESULT ANALYSIS";
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: subjectList,
+              datasets: [{
+                  label: 'internal',
+                  backgroundColor:'rgba(255, 206, 86, 0.2)',   
+                  borderColor:'rgba(255, 206, 86, 1)',
+                  data: internal,
+                  fill: false,
+                  borderWidth: 2
+              },
+              {
+                  label: 'external',
+                  data: external,
+                  backgroundColor:'rgba(54, 162, 235, 0.2)',   
+                  borderColor:'rgba(54, 162, 235, 1)',
+                  fill: false,
+                  borderWidth: 2
+              },
+              {
+                  label: 'totalMarks',
+                  data: totalMarks,
+                  backgroundColor:'rgba(255, 99, 132, 0.2)',   
+                  borderColor:'rgba(255,99,132,1)',
+                  fill: false,
+                  borderWidth: 2
+              }]
+          },
+          options: options1,
+      });
+    }
+    semesterList={{ semester }}
+    getData('/api/{{ rollNo }}/','total','');
+    for (var i = 0; i < semesterList.length; i ++ ){
+        var endpoint = '/api/{{ rollNo }}/'+semesterList[i]+'/';
+        getData(endpoint,'Chart'+semesterList[i],semesterList[i]);
+     }
+
+     function test(){
+        var ctx = document.getElementById("rankingChart");
+        options1.title.text="SEMESTER RESULT ANALYSIS";
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{semester}},
+                datasets: [{
+                    label: 'internal',
+                    backgroundColor:'rgba(255, 206, 86, 0.2)',   
+                    borderColor:'rgba(255, 206, 86, 1)',
+                    data: {{internalRanks}},
+                    fill: false,
+                    borderWidth: 2
+                },
+                {
+                    label: 'external',
+                    data: {{externalRanks}},
+                    backgroundColor:'rgba(54, 162, 235, 0.2)',   
+                    borderColor:'rgba(54, 162, 235, 1)',
+                    fill: false,
+                    borderWidth: 2
+                },
+                {
+                    label: 'total',
+                    data: {{totalRanks}},
+                    backgroundColor:'rgba(255, 99, 132, 0.2)',   
+                    borderColor:'rgba(255,99,132,1)',
+                    fill: false,
+                    borderWidth: 2
+                }]
+            },
+            options: options1,
+        });
+     }
+  </script>
+
+{% endif %}
+{%endblock %}

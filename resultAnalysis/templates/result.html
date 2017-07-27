@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}{{ title  }}{% endblock %}
+
+{% block content %}
+
+
+	<div class="row" style="width: 90% ;">
+	<div class="col l12 s12 m12 filter-box right-align">
+	  <div class="input-field col s12 l4">
+    	<select id="subject" onchange="getSubData()">
+    		{% if not subjectCode %}
+              <option value="" disabled selected>Total Semester Marks</option>
+            {% else %}
+            <option value="">Total Semester Marks</option>
+            {% endif %}
+              {% for subject in subjects %}
+              	{% if subjectCode == subject.subjectCode %}
+              	<option value="{{ subject.subjectCode }}" disabled selected>{{ subject.subjectName }}</option>
+              	{% else %}
+              	<option value="{{ subject.subjectCode }}">{{ subject.subjectName }}</option>
+              	{% endif %}
+              {% endfor %}
+        </select>
+    <label>Subject wise analysis
+    </label>
+  </div>
+  <div class="input-field col s12 l4">
+	<select id="sem" onchange="changeSem()">
+	<option value="" disabled selected> --- </option>
+		{% for i in "iamaweso" %}
+        <option value="{{forloop.counter}}">{{forloop.counter}}</option>
+        {% endfor %}
+    </select>
+<label>Change Semester
+</label>
+</div>
+  <div class="col s12 l4 input-field">
+  <span>Sort By</span>
+  <button onclick="sortResult('internal')" class="cstmBtn">Internal</button>
+  <button onclick="sortResult('external')" class="cstmBtn">External</button>
+  <button onclick="sortResult('total')" class="cstmBtn">Total Marks</button>
+  </div>
+	</div>
+	{% if not results%}
+	<div class="myBox col l12 s12">
+	<p>Sorry, No results found. <a href="{% url 'result:newResult' %}">Click here</a> to add results of your colleges</p>
+	</div>
+	{% endif %}
+	<div id="list">
+	{% for result in results %}
+	<div class="col s12 m4 result-card" data-internal="{{ result.internal }}"
+	 data-external="{{result.external}}" data-total="{{result.totalMarks}}">
+	  <div class="card horizontal" style="padding:10px;">
+	    <div class="card-image ">
+	    {% if result.student.image|length > 200 %}
+	      	<img src="{{ result.student.image }}"  class="user-img">
+	    {% else %}
+	    	<img class="user-img" src="https://www.servicewiz.com/swizz/resources/images/no-user-img.png">
+	    {% endif %}
+	      <!-- <span class="card-title">{{ result.student.name|capfirst }}</span> -->
+	    </div>
+	    <div class="card-content" style="padding:10px;">
+	    	<p><span class="rank">#{{forloop.counter}}</span> <span>{{ result.student }}</span>
+	    	<br/>{{ result.student.name|truncatechars:16 }}<span class="{{ result.resultStatus }}">{{ result.resultStatus }}</span></p>
+			<p><b>Internal</b> : {{ result.internal }}</p>
+			<p><b>External</b> : {{ result.external }}</p>
+			<p><b>Total Marks</b> : {{ result.totalMarks }}</p>
+			<!-- <table>
+			<tr>
+			<td>Internal</td>
+			<td>External</td>
+			<td>Total</td>
+			</tr>
+			<tr>
+			<td>555</td>
+			<td>555</td>
+			<td></td>
+			</tr>
+			</table> -->
+			{% if not subjectCode %}
+			<a onclick="loadResult('{{ result.get_urlSemester }}')" href="#modal1">View Details</a>
+			 &nbsp&nbsp&nbsp&nbsp<a href="/analysis/student/{{ result.student.rollNo }}">Analyze</a>
+			{%endif%}
+
+	    </div>
+	    <!-- <div class="card-action"> -->
+			<!-- <a href="{{ result.get_urlSemester }}">This is a link</a> -->
+		<!-- 	<a onclick="loadResult('{{ result.get_urlSemester }}')" href="#modal1">Full Result</a>
+	    </div> -->
+	  </div>
+	</div>
+	{% endfor %}
+	</div>
+  </div>
+
+  <!-- Modal Structure -->
+<div id="modal1" class="modal">
+	<div id="result-doc" class="modal-content">
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		function getSubData(){
+			var url=(document.URL).split('?')[0]+document.getElementById('subject').value;
+			subjectCode='/{{ subjectCode }}'
+			if (subjectCode.length > 4)
+				url= url.replace(subjectCode,'');
+			window.location=url;
+		}
+		function changeSem(){
+			var url= document.URL
+			var sem  = document.getElementById('sem').value
+			var n = url.length
+			console.log(n)
+			window.location = url.substr(0,n-2)+sem+'/'
+
+			// window.location=url;
+		}
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var url= document.URL
+			var n = url.length
+			document.getElementById('sem').value = url[n-2]
+			$('.modal').modal();
+		});
+	</script>
+	<script type="text/javascript">
+		function loadResult(url) {
+			document.getElementById("result-doc").innerHTML = ""
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("result-doc").innerHTML = this.responseText;
+				}
+			};
+			xhttp.open("GET",url, true);
+			xhttp.send();
+		}
+	</script>
+	<script>
+	function sortResult(order){
+		$(document).ready(function() {
+			var divList = $(".result-card");
+			divList.sort(function(a, b){
+				if($(b).data(order) == $(a).data(order)){
+					return $(b).data('total')-$(a).data('total')
+				}else{
+					return $(b).data(order)-$(a).data(order)
+				}
+			});
+			$("#list").html(divList)
+			for(var i = 0; i < divList.length; i++){
+				var div = divList[i];
+				var span = div.getElementsByClassName('rank')[0];
+				span.innerText = "#"+(i+1);
+	  			// console.log(divList[i])
+	  		}
+		});
+	}
+	</script>
+	<script type="text/javascript">
+	
+		$(document).ready(function() {
+			$('select').material_select();
+			});
+		$('select').material_select('destroy');
+	</script>
+{%endblock %}
+

@@ -1,0 +1,22 @@
+@media (max-width:641px)  { 
+	.colg{
+		font-size:1.5rem;
+	}
+	.heading{
+		font-size:2rem;
+	}
+	.as_title{
+		margin-top:40%;
+	}
+	.as_title_subpage{
+			margin-top:180px;
+	}
+	.as_title_subpage span{
+		font-size:3rem;
+		font-weight:900;
+		line-height:0px;
+	}
+	#subm{
+		font-size:1.5rem;
+	}
+}

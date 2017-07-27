@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Contact Us{% endblock %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+{% block content %}
+<div class="row" style="margin-bottom:0px;padding-bottom:0px;">
+   <div id="sendFeedback" class="section scrollspy row">
+      <div class="container">
+         <h3 class="center-align"><span>Send Us Feedback</span></h3>
+         <form id="contactForm" class="col s12 l11">
+         {% csrf_token %}
+            <div class="row">
+               <div class="input-field col l6 s12">
+                  <i class="material-icons prefix">account_circle</i>
+                  <input id="name" name="name" type="text" pattern="[a-z,A-Z,\s]{0,30}" class="validate">
+                  <label for="name" data-error="looks like you misspelled your name">First Name</label>
+               </div>
+               <div class="input-field col l6 s12">
+                  <i class="material-icons prefix">phone</i>
+                  <input id="mobNo" name="mobNo" type="text" pattern="\d{10}" class="validate">
+                  <label for="mobNo" data-error="Please correct your Phone no.">Telephone</label>
+               </div>
+               <div class="input-field col l12 s12">
+                  <i class="material-icons prefix">email</i>
+                  <input id="email" required name="email" type="email" class="validate">
+                  <label for="email" data-error="Please correct your Email">Email*</label>
+               </div>
+               <div class="input-field col l12 s12">
+                  <i class="material-icons prefix">mode_edit</i>
+                  <textarea id="comment" name="comment" class="materialize-textarea" required></textarea>
+                  <label for="comment" data-error="Please fill out this field">Comments</label>
+               </div>
+               <div class="input-field col s12">
+                  <button type="submit" class="waves-effect waves-light btn col l2 offset-l10">
+                  Send<i class="material-icons right">send</i>
+                  </button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+   <div id="reachus" class="section row" style="margin-bottom:0px;padding-bottom:0px;">
+      <div class="conntainer">
+         <h3 class="center-align"><span>Reach Us</span></h3>
+         <h4 class="center-align flow-text">Feroze Gandhi Institute of Engineering &amp Technology</h4>
+         <p class="flow-text center-align"><i class="material-icons prefix">email</i>&nbsp contactus@resultanalysis.in</p>
+         <p class="flow-text center-align"><i class="material-icons prefix">phone</i>&nbsp Arpit Srivastava(9839468311)</p>
+         <p class="flow-text center-align"><i class="material-icons prefix">phone</i>&nbspRohit P. Singh(9616886946)</p>
+      </div>
+      <div class="l12">
+         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7157.103813467643!2d81.2367350075756!3d26.243745478699886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399ba1580a48a1b9%3A0x6d9caabf0668fa7f!2sFeroze+Gandhi+Institute+of+Engineering+%26+Technology!5e0!3m2!1sen!2sin!4v1487419292759" width="100%" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
+      </div>
+   </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+$(document).ready(function () {
+    $("#contactForm").submit(function(e){
+        e.preventDefault()
+        console.log($(this).serialize())
+        $.ajax({
+         method:"POST",
+         url:"{%url 'newapi-analysis:contact' %}",
+         data: $(this).serialize(),
+         success: function(data){
+            $("#contactForm").parent().html("<h3 class='flowtext'>Thankyou for your Feedback</h3>")
+         },
+         error: function(data){
+            console.log(data)
+         }
+      })
+    })
+})
+</script>
+{% endblock %}

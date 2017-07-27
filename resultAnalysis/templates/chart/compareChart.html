@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}{{ title  }}{% endblock %}
+{% block content %}
+<br/>
+<div class="row container">
+  <div class="col s12 m6 result-card">
+    <div class="card horizontal" style="padding:10px;">
+    <div>
+    <span class="flow-text">{{ baseStudent.name | truncatechars:19  }}</span><br>
+    <span>{{ baseStudent.rollNo }}</span><br>
+    <span>{{ baseStudent.branchCode.branchName }}</span><br>
+    <span>{{ baseStudent.college.collegeName }}</span>
+    </div>
+      <div class="card-image ">
+      {% if baseStudent.image|length > 200 %}
+          <img src="{{ baseStudent.image }}"  class="user-img">
+      {% else %}
+        <img class="user-img" src="https://www.servicewiz.com/swizz/resources/images/no-user-img.png">
+      {% endif %}
+        <!-- <span class="card-title">{{ result.student.name|capfirst }}</span> -->
+      </div>
+    </div>
+  </div>
+  <div class="col s12 m6 result-card">
+    <div class="card horizontal" style="padding:10px;">
+      <div class="card-image ">
+      {% if otherStudent.image|length > 200 %}
+          <img src="{{ otherStudent.image }}"  class="user-img">
+      {% else %}
+        <img class="user-img" src="https://www.servicewiz.com/swizz/resources/images/no-user-img.png">
+      {% endif %}
+        <!-- <span class="card-title">{{ result.student.name|capfirst }}</span> -->
+      </div>
+      <div class="card-content" style="padding:10px;">
+      <span class="flow-text">{{ otherStudent.name | truncatechars:19 }}</span><br>
+      <span>{{ otherStudent.rollNo }}</span><br>
+      <span>{{ otherStudent.branchCode.branchName }}</span><br>
+      <span>{{ otherStudent.college.collegeName }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <h3 style="text-align: center"><span>Total Marks</span></h3>
+  <div class="chart">
+    <canvas id="chart1" ></canvas>
+  </div>
+  <h3 style="text-align: center" ><span>External Marks</span></h3>
+  <div class="chart">
+    <canvas id="chart2" ></canvas>
+  </div>
+  <h3 style="text-align: center"><span>Internal Marks</span></h3>
+  <div class="chart">
+    <canvas id="chart3" ></canvas>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script type="text/javascript">
+options1= {
+              responsive: true,
+              maintainAspectRatio: false,
+              title:{
+                  display:true,
+                  text:'TEXT'
+              },
+              tooltips: {
+                  mode: 'index',
+                  intersect: false,
+              },
+              hover: {
+                  mode: 'nearest',
+                  intersect: true
+              },
+              scales: {
+                  xAxes: [{
+                      display: true,
+                      scaleLabel: {
+                          display: true,
+                          labelString: 'Semester'
+                      }
+                  }],
+                  yAxes: [{
+                      display: true,
+                      scaleLabel: {
+                          display: true,
+                          labelString: 'Value'
+                      }
+                  }]
+              }
+          }
+function setChart1(){    
+      var ctx = document.getElementById('chart1');
+      options1.title.text="SEMESTER TOTAL MARKS";
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: {{ semesterList }},
+              datasets: [{
+                  label: '{{ baseStudent.name }}',
+                  backgroundColor:'rgba(255, 0, 0, 0.2)',   
+                  borderColor:'rgba(255, 0, 0, 1)',
+                  data: {{ baseTotalList }},
+                  fill: false,
+                  borderWidth: 1
+              },
+              {
+                  label: '{{ otherStudent.name }}',
+                  data: {{ otherTotalList }},
+                  backgroundColor:'rgba(0, 0, 255, 0.2)',   
+                  borderColor:'rgba(0, 0, 255, 1)',
+                  fill: false,
+                  borderWidth: 1
+              },]
+          },
+          options: options1,
+      })
+    }
+
+
+function setChart2(){    
+      var ctx = document.getElementById('chart3');
+      options1.title.text="SEMESTER INTERNAL MARKS";
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: {{ semesterList }},
+              datasets: [{
+                  label: '{{ baseStudent.name }}',
+                  backgroundColor:'rgba(255, 0, 0, 0.2)',   
+                  borderColor:'rgba(255, 0, 0, 1)',
+                  data: {{ baseInternalList }},
+                  fill: false,
+                  borderWidth: 1
+              },
+              {
+                  label: '{{ otherStudent.name }}',
+                  data: {{ otherInternalList }},
+                  backgroundColor:'rgba(0, 0, 255, 0.2)',   
+                  borderColor:'rgba(0, 0, 255, 1)',
+                  fill: false,
+                  borderWidth: 1
+              },]
+          },
+          options: options1,
+      })
+    }
+function setChart3(){    
+      var ctx = document.getElementById('chart2');
+      options1.title.text="SEMESTER EXTERNAL MARKS";
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: {{ semesterList }},
+              datasets: [{
+                  label: '{{ baseStudent.name }}',
+                  backgroundColor:'rgba(255, 0, 0, 0.2)',   
+                  borderColor:'rgba(255, 0, 0, 1)',
+                  data: {{ baseExternalList }},
+                  fill: false,
+                  borderWidth: 1
+              },
+              {
+                  label: '{{ otherStudent.name }}',
+                  data: {{ otherExternalList }},
+                  backgroundColor:'rgba(0, 0, 255, 0.2)',   
+                  borderColor:'rgba(0, 0, 255, 1)',
+                  fill: false,
+                  borderWidth: 1
+              },]
+          },
+          options: options1,
+      })
+    }
+
+
+    setChart1();
+    setChart2();
+    setChart3();
+</script>
+
+{%endblock %}
+

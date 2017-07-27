@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ title  }}{% endblock %}
+{% block content %}
+<br/>
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <div class="card">
+      <div class="card-content" style="padding-bottom: 0px">
+        <span class="card-title">Compare Your Result</span>
+        <div class="row">
+        <form action="" method="post" class="col s10 offset-s1">
+           {% csrf_token %}
+            <div class="row">
+            <span style="color: red">{{ form.non_field_errors }}</span>
+              <div class="input-field col s12 m6">
+                  {{ form.baseStudent }}
+                  <label for="baseStudent" data-error="Please Correct the Roll No">   1st Student Roll No.</label>
+                  <span style="color: red">{{ form.baseStudent.errors }}</span>
+              </div>
+              <div class="input-field col s12 m6">
+                {{ form.otherStudent }}
+                <label for="otherStudent" data-error="Please Correct the Roll No" >2nd Student Roll No.</label>
+                  <span style="color: red">{{ form.otherStudent.errors }}</span>
+              </div>
+            </div>
+            <center><button class="waves-effect waves-blue btn center">Compare</button></center>
+          </form>
+        </div>
+        {% if form.baseStudent.errors or  form.otherStudent.errors %}
+        <div class="card-action">
+              <a href="{% url 'result:newResult' %}" style="color: teal">Click here to add new Roll No.</a>
+            </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

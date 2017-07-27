@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ title  }}{% endblock %}
+{% block content %}
+<br/>
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <div class="card">
+      <div class="card-content" style="padding-bottom: 0px">
+        <span class="card-title">Add Your Result Here</span>
+        <div class="row">
+        <form action="" method="post" class="col s10 offset-s1">
+         {% csrf_token %}
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="url" name="url" class="validate" id="url" required />
+              <label for="url" data-error="Please enter a valid URL">URL</label>
+              <span for="url" style="color: red">{{ form.url.errors }}</span>
+            </div>
+            </div>
+            <div class="input-field col s12">
+              <input type="text" name="url" class="validate" id="url" required />
+              <label for="url" data-error="Please enter a valid URL">URL</label>
+              <span for="url" style="color: red">{{ form.url.errors }}</span>
+            </div>
+          </div>
+          <button class="waves-effect waves-blue btn center">submit</button>
+        </form>
+        </div>
+        <div style="padding:10px;">
+        <ul>
+        <li><b>NOTE</b></li>
+        <li>If you are having trouble in adding your URL then you should submit your roll number and URL here.</li>
+        <li>Open Your result and copy the URL of your result</li>
+        <li>Paste the URL copied from AKTU oneview result to URL field in the above form</li>
+        <li>Then click on submit button.
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
