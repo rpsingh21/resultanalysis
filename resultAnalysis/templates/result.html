@@ -14,10 +14,10 @@
             <option value="">Total Semester Marks</option>
             {% endif %}
               {% for subject in subjects %}
-              	{% if subjectCode == subject.subjectCode %}
-              	<option value="{{ subject.subjectCode }}" disabled selected>{{ subject.subjectName }}</option>
+              	{% if subjectCode == subject.subjectCode.subjectCode %}
+              	<option value="{{ subject.subjectCode.subjectCode }}" disabled selected>{{ subject.subjectCode.subjectName }}</option>
               	{% else %}
-              	<option value="{{ subject.subjectCode }}">{{ subject.subjectName }}</option>
+              	<option value="{{ subject.subjectCode.subjectCode }}">{{ subject.subjectCode.subjectName }}</option>
               	{% endif %}
               {% endfor %}
         </select>

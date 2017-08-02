@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+from django.db.models import Avg, Max, Min
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
@@ -80,8 +81,9 @@ def showSemesterResult(request,college,branch,yearOfJoining,semester):
 	results=TotalMarks.objects.filter(student__college=collegeObjects,student__branchCode=branchObjects,\
 		student__yearOfJoining=yearOfJoining,semester=semester).order_by('student__name')
 
-	# GETTING ALL SUBJECT LIST FOR OPTIONS
-	subjects=Subject.objects.filter(semester=semester,branchCode=branchObjects)
+	# GETTING ALL SUBJECT LIST FOR SUBJECT OPTIONS
+	subjects=Marks.objects.filter(student=results[0].student, subjectCode__semester=semester)
+
 	content={
 		'title':'Result of Students',
 		'results':results,
@@ -96,8 +98,10 @@ def showSubjectMarks(request,college,branch,yearOfJoining,semester,subjectCode):
 	subjectObject=get_object_or_404(Subject,subjectCode=subjectCode,semester=semester,branchCode=branchObjects)
 	results=Marks.objects.filter(student__college=collegeObjects,student__branchCode=branchObjects,\
 		student__yearOfJoining=yearOfJoining,subjectCode=subjectObject).order_by('student__name')
+
 	# GETTING ALL SUBJECT LIST FOR OPTIONS
-	subjects=Subject.objects.filter(semester=semester,branchCode=branchObjects)
+	subjects=Marks.objects.filter(student=results[0].student, subjectCode__semester=semester)
+	
 	aggregations = results.filter(internal__gte = 0, external__gte=0,totalMarks__gte=0).aggregate(Avg('internal'),Max('internal'),Min('internal'),Avg('external'),Max('external'),Min('external'),Avg('totalMarks'),Max('totalMarks'),Min('totalMarks'))
 	content={
 		'title':'Result of Students',
@@ -293,6 +297,7 @@ def getResult(url):
 	return name	
 
 ## FOR REFRESHING RESULT
+
 def refreshResult(results):
 	urls=Student.objects.all()
 	for url in urls:
@@ -320,6 +325,15 @@ def b():
 				name=url.student.name
 				print(url.student.name)
 				getResult(url.student.url)
+		except Exception as ex:
+			print(ex)
+			pass
+
+def c():
+	students = Student.objects.filter(yearOfJoining='2016')
+	for student in students:
+		try:
+			getResult(student.url)
 		except Exception as ex:
 			print(ex)
 			pass
