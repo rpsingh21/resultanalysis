@@ -14,7 +14,7 @@ class College(models.Model):
 
 # MODEL FOR  COURCE 
 class Course(models.Model):
-	courseCode=models.PositiveSmallIntegerField()
+	courseCode=models.PositiveSmallIntegerField(unique=True)
 	courseName=models.CharField(max_length=100)
 	noOfSemester=models.PositiveSmallIntegerField(default=0)
 
@@ -26,7 +26,7 @@ class Course(models.Model):
 
 # MODEL FOR BRANCH AND BRANCHCODE
 class Branch(models.Model):
-	course=models.ForeignKey(Course)
+	course=models.ForeignKey(Course, on_delete=models.CASCADE)
 	branchCode=models.PositiveSmallIntegerField(unique=True)
 	branchName=models.CharField(max_length=100)
 
@@ -41,8 +41,8 @@ class Branch(models.Model):
 class Student(models.Model):
 	rollNo=models.CharField(max_length=20,unique=True)
 	yearOfJoining=models.PositiveSmallIntegerField()
-	college=models.ForeignKey(College)
-	branchCode=models.ForeignKey(Branch)
+	college=models.ForeignKey(College, models.CASCADE)
+	branchCode=models.ForeignKey(Branch, models.CASCADE)
 	name=models.CharField(max_length=100,)
 	image=models.TextField()
 	url=models.URLField(max_length=512)
@@ -60,7 +60,7 @@ class Student(models.Model):
 
 # MODEL FOR TOTAL MARKS AND INTERNAL AND EXTERNAL
 class TotalMarks(models.Model):
-	student=models.ForeignKey(Student)
+	student=models.ForeignKey(Student, on_delete=models.CASCADE)
 	semester=models.PositiveSmallIntegerField(null=True)
 	totalMarks=models.IntegerField(null=True)
 	internal=models.IntegerField(null=True)
@@ -82,7 +82,7 @@ class TotalMarks(models.Model):
 
 # MODEL FOR SUBJECT AND SUBJECT CODE  
 class Subject(models.Model):
-	branchCode=models.ForeignKey(Branch)
+	branchCode=models.ForeignKey(Branch, on_delete=models.CASCADE)
 	subjectCode=models.CharField(max_length=20)
 	subjectName=models.CharField(max_length=100,null=True)
 	subjectType=models.CharField(max_length=100,null=True)
@@ -98,13 +98,13 @@ class Subject(models.Model):
 
 #MODEL FROM DIFFRENTS SUBJECTS MARKS 
 class Marks(models.Model):
-	student=models.ForeignKey(Student)
-	subjectCode=models.ForeignKey(Subject)
+	student=models.ForeignKey(Student, on_delete=models.CASCADE)
+	subjectCode=models.ForeignKey(Subject, on_delete=models.CASCADE)
 	internal=models.IntegerField(null=True)
 	external=models.IntegerField(null=True)
 	totalMarks=models.IntegerField(null=True)
 	backMarks=models.IntegerField(default=-1)
-	backStatus=models.NullBooleanField()
+	backStatus=models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.student.rollNo

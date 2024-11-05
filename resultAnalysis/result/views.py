@@ -126,8 +126,8 @@ def studentSemesterResult(request,rollNo,semester):
 ###  CODE FOR SCRAP RESULT 
 
 def getResult(url):
-	user_agent = {'User-agent': 'Mozilla/5.0'}
-	req=requests.get(url,headers = user_agent)
+	user_agent = {'User-agent': 'Mozilla/5.0', 'referer': 'https://erp.aktu.ac.in/webpages/oneview/oneview.aspx'}
+	req=requests.get(url, headers = user_agent)
 	soup=BeautifulSoup(req.content,'html.parser')
 
 	# FIND GENRAL DETAILS OF USER
@@ -140,24 +140,35 @@ def getResult(url):
 	#print(int(branchCode),barnchName)
 
 	## NOW CHECKING UNIVERSAL DETAILS OF STUDENTS
-	collegeObjects=College.objects.get_or_create(collegeCode=int(collegeCode),collegeName=collegeName)
-	courseObjects=Course.objects.get_or_create(courseCode=int(courseCode),courseName=courseName)
+	collegeObjects=College.objects.get_or_create(collegeCode=int(collegeCode))
+	if collegeObjects[1]:
+		collegeObjects[0].collegeName = collegeName
+		collegeName.save()
+	courseObjects=Course.objects.get_or_create(courseCode=int(courseCode))
+	if courseObjects[1]:
+		courseObjects[0].courseName = courseName
+		courseObjects.save()
 	#print(courseObjects[0])
-	branchObjects=Branch.objects.get_or_create(course=courseObjects[0],branchCode=int(branchCode),branchName=barnchName)
+	branchObjects=Branch.objects.get_or_create(course=courseObjects[0],branchCode=int(branchCode))
+	if branchObjects[1]:
+		branchObjects[0].branchName=barnchName
+		branchObjects[0].save()
 
 	rollNo=(soup.find(id='lblRollNo').text).strip()
 	enrollmentNo=soup.find(id='lblEnrollmentNo').text.strip()
 	name=soup.find(id='lblFullName').text.strip()
 	fatherName=soup.find(id='lblFatherName').text.strip()
 	gender=soup.find(id='lblGender').text.strip()
-	image=soup.find(id='imgphoto')['src'].strip()
+	# image=soup.find(id='imgphoto')['src'].strip()
+	image = ''
 	yearOfJoining=2000+int(rollNo[0:2])
 
 	## IF STUDENT IS LATERAL THEN 
-	lateral=soup.find(id='ctl03_lblSem').text.strip()
-	if lateral == '3,4':
-		print("------------------- lateral ------------------------ ")
-		yearOfJoining-=1
+	if soup.find(id='ctl04_lblSession'):
+		lateral=soup.find(id='ctl04_lblSession').text.strip()
+		if 'LATERAL' in lateral:
+			print("------------------- lateral ------------------------ ")
+			yearOfJoining-=1
 
 	studentObject=Student.objects.get_or_create(
 		rollNo=rollNo,

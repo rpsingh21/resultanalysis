@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from .views import(
 	studentResulAnalysis,
@@ -6,7 +6,7 @@ from .views import(
 	)
 
 urlpatterns = [
-	url(r'^student/(?P<rollNo>\d+)/$',studentResulAnalysis,name='studentResulAnalysis'),
-	url(r'^student/$',studentResulAnalysis,name='studentResulAnalysisform'),
-	url(r'^compare/$',compareResult,name="compare"),
+	re_path(r'^student/(?P<rollNo>\d+)/$',studentResulAnalysis,name='studentResulAnalysis'),
+	re_path(r'^student/$',studentResulAnalysis,name='studentResulAnalysisform'),
+	re_path(r'^compare/$',compareResult,name="compare"),
 ]

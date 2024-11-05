@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from .views import (
 	getNewResult,
@@ -12,12 +12,12 @@ from .views import (
 	)
 
 urlpatterns=[
-	url(r'^$',getSessionAndsemester,name='home'),
-	url(r'^addnewrollno/$',getNewResult,name='newResult'),
-	url(r'^contact/$',contactUs,name='contact'),
-	url(r'^report/error/$',reportError,name='reporterror'),
-	url(r'^report/bug/$',reportBug,name='reportbug'),
-	url(r'^results/(?P<college>[\w|\W]+)/(?P<branch>[\w|\W]+)/(?P<yearOfJoining>[\w|\W]+)/(?P<semester>[\w|\W]+)/(?P<subjectCode>[\w|\W]+)/$',showSubjectMarks,name='subjectMarks'),
-	url(r'^results/(?P<college>[\w|\W]+)/(?P<branch>[\w|\W]+)/(?P<yearOfJoining>[\w|\W]+)/(?P<semester>[\w|\W]+)/$',showSemesterResult,name='semesterResult'),
-	url(r'^result/(?P<rollNo>\d+)/(?P<semester>\d+)/$',studentSemesterResult,name='studentSemesterResult'),
+	re_path(r'^$',getSessionAndsemester,name='home'),
+	re_path(r'^addnewrollno/$',getNewResult,name='newResult'),
+	re_path(r'^contact/$',contactUs,name='contact'),
+	re_path(r'^report/error/$',reportError,name='reporterror'),
+	re_path(r'^report/bug/$',reportBug,name='reportbug'),
+	re_path(r'^results/(?P<college>[\w|\W]+)/(?P<branch>[\w|\W]+)/(?P<yearOfJoining>[\w|\W]+)/(?P<semester>[\w|\W]+)/(?P<subjectCode>[\w|\W]+)/$',showSubjectMarks,name='subjectMarks'),
+	re_path(r'^results/(?P<college>[\w|\W]+)/(?P<branch>[\w|\W]+)/(?P<yearOfJoining>[\w|\W]+)/(?P<semester>[\w|\W]+)/$',showSemesterResult,name='semesterResult'),
+	re_path(r'^result/(?P<rollNo>\d+)/(?P<semester>\d+)/$',studentSemesterResult,name='studentSemesterResult'),
 ]

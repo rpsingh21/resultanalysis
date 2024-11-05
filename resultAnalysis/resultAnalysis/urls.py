@@ -15,17 +15,17 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.conf.urls import url, include
+from django.urls import re_path, include
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/',include('resultAnalyser.api.urls',namespace='api-analysis')),
-    url(r'^newapi/',include('result.api.urls',namespace='newapi-analysis')),
-    url(r'^analysis/',include('resultAnalyser.urls',namespace='analysis')),
-    url(r'^account/',include('account.urls',namespace='account')),
-    url(r'^',include('result.urls',namespace='result')),
-    url(r'^xlsx/',include('xlsx.urls',namespace='xlsx')),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^api/',include(('resultAnalyser.api.urls', 'api-analysis'),namespace='api-analysis')),
+    re_path(r'^newapi/',include(('result.api.urls', 'newapi-analysis'),namespace='newapi-analysis')),
+    re_path(r'^analysis/',include(('resultAnalyser.urls', 'analysis'),namespace='analysis')),
+    re_path(r'^account/',include(('account.urls', 'account'),namespace='account')),
+    re_path(r'^',include(('result.urls', 'result'),namespace='result')),
+    re_path(r'^xlsx/',include(('xlsx.urls', 'xlsx'),namespace='xlsx')),
 ]
 
 if settings.DEBUG is True:

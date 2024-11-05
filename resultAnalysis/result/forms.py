@@ -15,7 +15,7 @@ class UrlForm(forms.Form):
 	# DOING FROMS VAILDATIONS
 	def clean_url(self,*args,**kwargs):
 		url=self.cleaned_data.get('url')
-		if not url[0:40]=='https://erp.aktu.ac.in/WebPages/OneView/':
+		if not url[0:40]=='https://erp.aktu.ac.in/webpages/oneview/':
 			raise forms.ValidationError("INVALID URL!! Please enter a valid URL")
 		return url
 

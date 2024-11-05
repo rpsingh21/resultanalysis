@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from .views import (
 	semseterResultxlsx,
 	)
 
 urlpatterns=[
-	url(r'^semester-xlsx/(?P<collegeCode>\d+)/(?P<branchCode>\d+)/(?P<yearOfJoining>\d+)/(?P<semester>\d+)/$',semseterResultxlsx,name='semseterResultxlsx')
+	re_path(r'^semester-xlsx/(?P<collegeCode>\d+)/(?P<branchCode>\d+)/(?P<yearOfJoining>\d+)/(?P<semester>\d+)/$',semseterResultxlsx,name='semseterResultxlsx')
 ]

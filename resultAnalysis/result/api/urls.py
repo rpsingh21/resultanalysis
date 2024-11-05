@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from .views import (
 	ContactUsCreateAPIView,
 	ReportErrorCreateAPIView,
@@ -6,8 +6,8 @@ from .views import (
 	)
 
 urlpatterns = [
-    url(r'^contact/$',ContactUsCreateAPIView.as_view(),name="contact"),
-    url(r'^reportbug/$',ReportErrorCreateAPIView.as_view(),name="reportBug"),
-    url(r'^reporterror/$',ReportBugCreateAPIView.as_view(),name="reportError"),
+    re_path(r'^contact/$',ContactUsCreateAPIView.as_view(),name="contact"),
+    re_path(r'^reportbug/$',ReportErrorCreateAPIView.as_view(),name="reportBug"),
+    re_path(r'^reporterror/$',ReportBugCreateAPIView.as_view(),name="reportError"),
 ]
   
