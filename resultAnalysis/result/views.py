@@ -8,7 +8,6 @@ from django.shortcuts import render, get_object_or_404
 from .forms import (
 	UrlForm,
 	SessionForm,
-	OrderForm,
 	)
 
 from .models import (
@@ -143,11 +142,11 @@ def getResult(url):
 	collegeObjects=College.objects.get_or_create(collegeCode=int(collegeCode))
 	if collegeObjects[1]:
 		collegeObjects[0].collegeName = collegeName
-		collegeName.save()
+		collegeObjects[0].save()
 	courseObjects=Course.objects.get_or_create(courseCode=int(courseCode))
 	if courseObjects[1]:
 		courseObjects[0].courseName = courseName
-		courseObjects.save()
+		courseObjects[0].save()
 	#print(courseObjects[0])
 	branchObjects=Branch.objects.get_or_create(course=courseObjects[0],branchCode=int(branchCode))
 	if branchObjects[1]:
@@ -348,5 +347,3 @@ def c():
 		except Exception as ex:
 			print(ex)
 			pass
-
-

@@ -3,8 +3,6 @@
 vEnv/
 static_cdn/
 resultanalysis/resultanalysis/setting.py
-resultanalysis/db.sqlite3
-resultAnalysis/result/migrations/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -106,3 +104,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+db.sqlite3
+
