@@ -1,14 +1,9 @@
-from django.db.models import Avg, Max, Min
-from django.http import HttpResponseRedirect
+from django.db.models import Max, Min
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from result.models import (
-	College,
-	Branch,
-	Course,
 	TotalMarks,
-	Subject,
 	Student,
 	Marks,
 	)
